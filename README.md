@@ -26,3 +26,12 @@ After adding new dependencies please run:
 ```
 mamba env export --no-builds | grep -v "prefix" > IV110.yml
 ```
+
+# Internal notes
+
+| Sample | Place       | Depth | Flow cell | Bar code |
+|--------|-------------|-------|-----------|----------|
+| B1     | Brno        | 5cm   | big       | 3        |
+| B2     | Brno        | 20cm  | big       | 4        |
+| D1     | Bretejovce  | 5cm   | big       | 7        |
+| D2     | Bretejovce  | 20cm  | big       | 8        |
