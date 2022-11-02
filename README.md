@@ -20,6 +20,15 @@ mamba env create -f IV110.yml
 mamba activate IV110
 ```
 
+It may be useful to look into the `config.yml` file and set some names to more
+appropriate values for You. An argument `-C`/`--config` is to be used for that.
+E.g. to download the `.fast5` files into this local repository, say folder
+`./data`, instead of (default) global folder `/data`:
+
+```
+snakemake -c1 data/barcode03 -C raw_data_local=data
+```
+
 # How to contribute
 
 After adding new dependencies please run:
