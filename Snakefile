@@ -2,7 +2,7 @@ configfile: "config.yml"
 
 rule download:
     output:
-        f"{config['raw_data_local']}{{barcode}}"
+        directory(f"{config['raw_data_local']}{{barcode}}")
     params:
         remote_path=lambda wildcards:
             f"{config['raw_data_remote']}/{wildcards.barcode}"
