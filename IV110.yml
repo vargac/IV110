@@ -1,0 +1,5 @@
+name: IV110
+channels:
+  - bioconda
+dependencies:
+  - snakemake-minimal
