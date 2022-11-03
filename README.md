@@ -33,8 +33,10 @@ snakemake -c1 data/barcode03 -C raw_data_local=data
 
 After adding new dependencies please run:
 ```
-mamba env export --no-builds | grep -v "prefix" > IV110.yml
+mamba env export --no-builds --from-history | grep -v "prefix" > IV110.yml
 ```
+And then hand-curate the `.yml` file as it may include unused channels
+and, on the other hand, not include the used ones.
 
 # Internal notes
 
