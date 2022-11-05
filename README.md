@@ -8,11 +8,11 @@ Authors: Viky, David, Simon
 # How to run
 
 We use a
-![mamba](https://mamba.readthedocs.io/en/latest/installation.html)/
-![conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
+[mamba](https://mamba.readthedocs.io/en/latest/installation.html)/
+[conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
 virtual environment. It should be possible to use `conda` instead of `mamba`,
 but we recommend to install
-![mambaforge](https://github.com/conda-forge/miniforge#mambaforge).
+[mambaforge](https://github.com/conda-forge/miniforge#mambaforge).
 Then You can create and activate the environment:
 
 ```
@@ -29,7 +29,7 @@ E.g. to download the `.fast5` files into this local repository, say folder
 snakemake -c1 data/barcode03 -C raw_data_local=data
 ```
 
-When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see ![Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)).
+When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see [Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)).
 
 # How to contribute
 
@@ -56,12 +56,12 @@ and, on the other hand, not include the used ones.
 1. Basecalling 
     - Guppy-gpu
 2. Quality control
-    - ![MinIONQC](https://github.com/roblanf/minion_qc)
+    - [MinIONQC](https://github.com/roblanf/minion_qc)
 3. Filtering, trimming, adapter removal
-    - ![Porechop](https://github.com/rrwick/Porechop)
-    - ![NanoFilt](https://github.com/wdecoster/nanofilt)
+    - [Porechop](https://github.com/rrwick/Porechop)
+    - [NanoFilt](https://github.com/wdecoster/nanofilt)
 4. Genome assembly
-    - ![Unicycler](https://github.com/rrwick/Unicycler)
-    - ![medaka](https://github.com/nanoporetech/medaka) [error correction]
+    - [Unicycler](https://github.com/rrwick/Unicycler)
+    - [medaka](https://github.com/nanoporetech/medaka) [error correction]
 
 
