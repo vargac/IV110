@@ -29,6 +29,8 @@ E.g. to download the `.fast5` files into this local repository, say folder
 snakemake -c1 data/barcode03 -C raw_data_local=data
 ```
 
+When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see ![Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)).
+
 # How to contribute
 
 After adding new dependencies please run:
@@ -46,3 +48,20 @@ and, on the other hand, not include the used ones.
 | B2     | Brno        | 20cm  | big       | 4        |
 | D1     | Bretejovce  | 5cm   | big       | 7        |
 | D2     | Bretejovce  | 20cm  | big       | 8        |
+
+
+# Workflow
+
+## MinION data preprocessing
+1. Basecalling 
+    - Guppy-gpu
+2. Quality control
+    - ![MinIONQC](https://github.com/roblanf/minion_qc)
+3. Filtering, trimming, adapter removal
+    - ![Porechop](https://github.com/rrwick/Porechop)
+    - ![NanoFilt](https://github.com/wdecoster/nanofilt)
+4. Genome assembly
+    - ![Unicycler](https://github.com/rrwick/Unicycler)
+    - ![medaka](https://github.com/nanoporetech/medaka) [error correction]
+
+
