@@ -29,7 +29,11 @@ E.g. to download the `.fast5` files into this local repository, say folder
 snakemake -c1 data/barcode03 -C raw_data_local=data
 ```
 
-When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see [Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)).
+When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see [Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)), e.g.:
+
+```
+snakemake -c4 --use-conda
+```
 
 # How to contribute
 
@@ -64,4 +68,5 @@ and, on the other hand, not include the used ones.
     - [Unicycler](https://github.com/rrwick/Unicycler)
     - [medaka](https://github.com/nanoporetech/medaka) [error correction]
 
+To run the workflow
 
