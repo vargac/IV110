@@ -68,5 +68,3 @@ and, on the other hand, not include the used ones.
     - [Unicycler](https://github.com/rrwick/Unicycler)
     - [medaka](https://github.com/nanoporetech/medaka) [error correction]
 
-To run the workflow
-
