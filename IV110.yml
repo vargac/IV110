@@ -3,3 +3,4 @@ channels:
   - bioconda
 dependencies:
   - snakemake-minimal
+  - python=3.10
