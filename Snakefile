@@ -26,7 +26,15 @@ rule download:
         "{output}"
 
 
-# TODO add rule for guppy basecalling?
+# TODO check if it works, guppy has to be installed?
+rule basecalling:
+    input:
+        directory(f"{config['raw_data_local']}/{{barcode}}")
+    output:
+        directory(f"{BASECALLED_DIR}/{{barcode}}")
+    shell:
+        "mkdir -p `dirname {output}`  && "
+        "guppy_basecaller --input_path {input} --save_path {output} --flowcell FLO-MIN106 --kit SQK-RBK004"
 
 rule merge_fastq:
     input:
