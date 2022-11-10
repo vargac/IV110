@@ -29,7 +29,7 @@ rule download:
 # TODO check if it works, guppy has to be installed?
 rule basecalling:
     input:
-        directory(f"{config['raw_data_local']}/{{barcode}}")
+        f"{config['raw_data_local']}/{{barcode}}"
     output:
         directory(f"{BASECALLED_DIR}/{{barcode}}")
     shell:
