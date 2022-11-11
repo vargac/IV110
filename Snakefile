@@ -3,7 +3,7 @@ configfile: "config.yml"
 BASECALLED_DIR = config['basecalled_local']
 OUTPUT_DIR = config['outputs_local']
 # BARCODES = ["barcode03", "barcode04", "barcode07", "barcode08"]
-BARCODES = ["barcode03"]
+BARCODES = ["barcode08"]
 
 
 rule all:
@@ -30,15 +30,19 @@ rule download:
 rule basecalling:
     input:
         f"{config['raw_data_local']}/{{barcode}}"
+    params:
+        prefix=lambda wildcards, output: output[0][:-5]
     output:
-        directory(f"{BASECALLED_DIR}/{{barcode}}")
+#        directory(f"{BASECALLED_DIR}/{{barcode}}")
+        directory(f"{OUTPUT_DIR}/guppy/{{barcode}}/pass"),
+        f"{OUTPUT_DIR}/guppy/{{barcode}}/sequencing_summary.txt"
     shell:
-        "mkdir -p `dirname {output}`  && "
-        "guppy_basecaller --input_path {input} --save_path {output} --flowcell FLO-MIN106 --kit SQK-RBK004"
+        "guppy_basecaller --input_path {input} --save_path {params.prefix} --flowcell FLO-MIN106 --kit SQK-RBK004"
 
 rule merge_fastq:
     input:
-        f"{BASECALLED_DIR}/{{barcode}}/pass"
+#        f"{BASECALLED_DIR}/{{barcode}}/pass"
+        f"{OUTPUT_DIR}/guppy/{{barcode}}/pass"
     output:
         f"{OUTPUT_DIR}/merged_fastq/{{barcode}}/reads.fastq"
     shell:
@@ -58,7 +62,8 @@ rule compress_fastq:
 
 rule minionqc:
     input:
-        f"{BASECALLED_DIR}/{{barcode}}/sequencing_summary.txt"
+#        f"{BASECALLED_DIR}/{{barcode}}/sequencing_summary.txt"
+        f"{OUTPUT_DIR}/guppy/{{barcode}}/sequencing_summary.txt"
     output:
         directory(f"{OUTPUT_DIR}/minionqc/{{barcode}}")
     params:
