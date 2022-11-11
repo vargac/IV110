@@ -26,14 +26,12 @@ rule download:
         "{output}"
 
 
-# TODO check if it works, guppy has to be installed?
 rule basecalling:
     input:
         f"{config['raw_data_local']}/{{barcode}}"
     params:
         prefix=lambda wildcards, output: output[0][:-5]
     output:
-#        directory(f"{BASECALLED_DIR}/{{barcode}}")
         directory(f"{OUTPUT_DIR}/guppy/{{barcode}}/pass"),
         f"{OUTPUT_DIR}/guppy/{{barcode}}/sequencing_summary.txt"
     shell:
@@ -41,7 +39,6 @@ rule basecalling:
 
 rule merge_fastq:
     input:
-#        f"{BASECALLED_DIR}/{{barcode}}/pass"
         f"{OUTPUT_DIR}/guppy/{{barcode}}/pass"
     output:
         f"{OUTPUT_DIR}/merged_fastq/{{barcode}}/reads.fastq"
@@ -62,7 +59,6 @@ rule compress_fastq:
 
 rule minionqc:
     input:
-#        f"{BASECALLED_DIR}/{{barcode}}/sequencing_summary.txt"
         f"{OUTPUT_DIR}/guppy/{{barcode}}/sequencing_summary.txt"
     output:
         directory(f"{OUTPUT_DIR}/minionqc/{{barcode}}")
