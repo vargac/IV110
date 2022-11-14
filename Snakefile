@@ -92,7 +92,7 @@ rule flye:
     conda:
         "envs/flye.yaml"
     shell:
-        "flye --nano-raw {input} -o {params.output_dir} --threads 4"
+        "flye --nano-raw {input} -o {params.output_dir} --meta --threads 4"
 
 
 rule medaka:
