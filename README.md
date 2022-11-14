@@ -66,8 +66,7 @@ and, on the other hand, not include the used ones.
     - [MinIONQC](https://github.com/roblanf/minion_qc)
 3. Filtering, trimming, adapter removal
     - [Porechop](https://github.com/rrwick/Porechop)
-    - [NanoFilt](https://github.com/wdecoster/nanofilt)
 4. Genome assembly
-    - [Unicycler](https://github.com/rrwick/Unicycler)
+    - [Flye](https://github.com/fenderglass/Flye)
     - [medaka](https://github.com/nanoporetech/medaka) [error correction]
 

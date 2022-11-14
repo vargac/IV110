@@ -81,34 +81,47 @@ rule porechop:
         "porechop -i {input} -o {output} --discard_middle"
 
 
-rule nanofilt:
+# rule nanofilt:
+#     input:
+#         f"{OUTPUT_DIR}/porechop/{{barcode}}/reads-porechop.fastq.gz"
+#     output:
+#         f"{OUTPUT_DIR}/nanofilt/{{barcode}}/reads-nanofilt.fastq.gz"
+#     conda:
+#         "envs/nanofilt.yaml"
+#     shell:
+#         "gunzip -c {input} | NanoFilt -q 8 | gzip > {output}"
+
+
+# rule unicycler:
+#     input:
+#         f"{OUTPUT_DIR}/nanofilt/{{barcode}}/reads-nanofilt.fastq.gz"
+#     output:
+#         f"{OUTPUT_DIR}/unicycler/{{barcode}}/assembly.fasta"
+#     params:
+#         output_dir=f"{OUTPUT_DIR}/unicycler/{{barcode}}"
+#     conda:
+#         "envs/unicycler.yaml"
+#     shell:
+#         "unicycler -l {input} -o {params.output_dir}"
+
+
+rule flye:
     input:
         f"{OUTPUT_DIR}/porechop/{{barcode}}/reads-porechop.fastq.gz"
     output:
-        f"{OUTPUT_DIR}/nanofilt/{{barcode}}/reads-nanofilt.fastq.gz"
-    conda:
-        "envs/nanofilt.yaml"
-    shell:
-        "gunzip -c {input} | NanoFilt -q 8 | gzip > {output}"
-
-
-rule unicycler:
-    input:
-        f"{OUTPUT_DIR}/nanofilt/{{barcode}}/reads-nanofilt.fastq.gz"
-    output:
-        f"{OUTPUT_DIR}/unicycler/{{barcode}}/assembly.fasta"
+        f"{OUTPUT_DIR}/flye/{{barcode}}/assembly.fasta"
     params:
-        output_dir=f"{OUTPUT_DIR}/unicycler/{{barcode}}"
+        output_dir=f"{OUTPUT_DIR}/flye/{{barcode}}"
     conda:
-        "envs/unicycler.yaml"
+        "envs/flye.yaml"
     shell:
-        "unicycler -l {input} -o {params.output_dir}"
+        "flye --nano-raw {input} -o {params.output_dir} --threads 4"
 
 
 rule medaka:
     input:
-        assembly=f"{OUTPUT_DIR}/unicycler/{{barcode}}/assembly.fasta",
-        raw_reads=f"{OUTPUT_DIR}/merged_fastq/{{barcode}}/reads.fastq.gz"
+        assembly=f"{OUTPUT_DIR}/flye/{{barcode}}/assembly.fasta",
+        raw_reads=f"{OUTPUT_DIR}/porechop/{{barcode}}/reads-porechop.fastq.gz"
     output:
         f"{OUTPUT_DIR}/medaka/{{barcode}}/consensus.fasta"
     params:
