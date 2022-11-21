@@ -3,7 +3,7 @@ configfile: "config.yml"
 BASECALLED_DIR = config['basecalled_local']
 OUTPUT_DIR = config['outputs_local']
 # BARCODES = ["barcode03", "barcode04", "barcode07", "barcode08"]
-BARCODES = ["barcode08"]
+BARCODES = ["barcode03"]
 
 
 rule all:
@@ -36,6 +36,7 @@ rule basecalling:
         f"{OUTPUT_DIR}/guppy/{{barcode}}/sequencing_summary.txt"
     shell:
         "guppy_basecaller --input_path {input} --save_path {params.prefix} --flowcell FLO-MIN106 --kit SQK-RBK004"
+
 
 rule merge_fastq:
     input:
@@ -81,34 +82,23 @@ rule porechop:
         "porechop -i {input} -o {output} --discard_middle"
 
 
-rule nanofilt:
+rule flye:
     input:
         f"{OUTPUT_DIR}/porechop/{{barcode}}/reads-porechop.fastq.gz"
     output:
-        f"{OUTPUT_DIR}/nanofilt/{{barcode}}/reads-nanofilt.fastq.gz"
-    conda:
-        "envs/nanofilt.yaml"
-    shell:
-        "gunzip -c {input} | NanoFilt -q 8 | gzip > {output}"
-
-
-rule unicycler:
-    input:
-        f"{OUTPUT_DIR}/nanofilt/{{barcode}}/reads-nanofilt.fastq.gz"
-    output:
-        f"{OUTPUT_DIR}/unicycler/{{barcode}}/assembly.fasta"
+        f"{OUTPUT_DIR}/flye/{{barcode}}/assembly.fasta"
     params:
-        output_dir=f"{OUTPUT_DIR}/unicycler/{{barcode}}"
+        output_dir=f"{OUTPUT_DIR}/flye/{{barcode}}"
     conda:
-        "envs/unicycler.yaml"
+        "envs/flye.yaml"
     shell:
-        "unicycler -l {input} -o {params.output_dir}"
+        "flye --nano-raw {input} -o {params.output_dir} --meta --threads 4"
 
 
 rule medaka:
     input:
-        assembly=f"{OUTPUT_DIR}/unicycler/{{barcode}}/assembly.fasta",
-        raw_reads=f"{OUTPUT_DIR}/merged_fastq/{{barcode}}/reads.fastq.gz"
+        assembly=f"{OUTPUT_DIR}/flye/{{barcode}}/assembly.fasta",
+        raw_reads=f"{OUTPUT_DIR}/porechop/{{barcode}}/reads-porechop.fastq.gz"
     output:
         f"{OUTPUT_DIR}/medaka/{{barcode}}/consensus.fasta"
     params:
