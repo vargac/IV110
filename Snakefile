@@ -1,9 +1,7 @@
 configfile: "config.yml"
 
-BASECALLED_DIR = config['basecalled_local']
 OUTPUT_DIR = config['outputs_local']
-# BARCODES = ["barcode03", "barcode04", "barcode07", "barcode08"]
-BARCODES = ["barcode03"]
+BARCODES = ["barcode04", "barcode07", "barcode08"]
 
 
 rule all:
