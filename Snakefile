@@ -107,4 +107,20 @@ rule medaka:
         "envs/medaka.yaml"
     shell:
         "medaka_consensus -i {input.raw_reads} -d {input.assembly} -o {params.output_dir}"
-        
+
+rule diamond:
+    input:
+        f"{OUTPUT_DIR}/medaka/{{barcode}}/consensus.fasta"
+    output:
+        f"{OUTPUT_DIR}/diamond/{{barcode}}/aligned.daa"
+    shell:
+        "diamond blastx -q {input} -d nr.dmnd -o {output} -F 15 -f 100 --range-culling --top 10 -p 4"
+
+rule meganize:
+    input:
+        f"{OUTPUT_DIR}/diamond/{{barcode}}/aligned.daa"
+    output:
+        f"{OUTPUT_DIR}/megan/{{barcode}}/aligned.daa"
+    shell:
+        "cp {input} {output} && "
+        "{config['meganizer']} -i {output} -mdb {config['megan_map']} --longReads"
