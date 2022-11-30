@@ -1,13 +1,14 @@
 configfile: "config.yml"
 
 OUTPUT_DIR = config['outputs_local']
-BARCODES = ["barcode04", "barcode07", "barcode08"]
+BARCODES = ["barcode03", "barcode04", "barcode07", "barcode08"]
+JUMP = f"{config['username']}@aisa.fi.muni.cz"
 
 
 rule all:
     input:
         expand(f"{OUTPUT_DIR}/minionqc/{{barcode}}", barcode=BARCODES),
-        expand(f"{OUTPUT_DIR}/medaka/{{barcode}}/consensus.fasta", barcode=BARCODES)
+        expand(f"{OUTPUT_DIR}/megan/{{barcode}}/aligned.daa", barcode=BARCODES)
 
 
 rule download:
@@ -18,9 +19,8 @@ rule download:
             f"{config['raw_data_remote']}/{wildcards.barcode}"
     shell:
         "mkdir -p `dirname {output}` && "
-        "echo -n 'Enter faculty xlogin: ' && read user && "
-        "scp -r -o \"ProxyJump $user@aisa.fi.muni.cz\" "
-        "$user@adonis.fi.muni.cz:{params.remote_path} "
+        "scp -r -o \"ProxyJump {JUMP}\" "
+        f"{config['username']}@adonis.fi.muni.cz:{{params.remote_path}} "
         "{output}"
 
 
@@ -111,14 +111,30 @@ rule diamond:
         f"{OUTPUT_DIR}/medaka/{{barcode}}/consensus.fasta"
     output:
         f"{OUTPUT_DIR}/diamond/{{barcode}}/aligned.daa"
+    params:
+        wd="~/vargac/IV110/{barcode}"
     shell:
-        "diamond blastx -q {input} -d nr.dmnd -o {output} -F 15 -f 100 --range-culling --top 10 -p 4"
+        "scp -o \"ProxyJump {JUMP}\" "
+            "{input} hedron:{params.wd}/ && "
+        "ssh -J {JUMP} hedron "
+            "diamond blastx -q {params.wd}/consensus.fasta -d nr.dmnd "
+            "-o {params.wd}/aligned.daa "
+            "-F 15 -f 100 --range-culling --top 10 -p 4 && "
+        "scp -o \"ProxyJump {JUMP}\" "
+            "hedron:{params.wd}/aligned.daa {output}"
 
 rule meganize:
     input:
         f"{OUTPUT_DIR}/diamond/{{barcode}}/aligned.daa"
     output:
         f"{OUTPUT_DIR}/megan/{{barcode}}/aligned.daa"
+    params:
+        wd="~/vargac/IV110/{barcode}"
     shell:
-        "cp {input} {output} && "
-        "{config['meganizer']} -i {output} -mdb {config['megan_map']} --longReads"
+        "scp -o \"ProxyJump {JUMP}\" "
+            "{input} hedron:{params.wd}/ && "
+        "ssh -J {JUMP} hedron "
+            f"{config['meganizer']} -i {{params.wd}}/aligned.daa "
+            f"-mdb {config['megan_map']} --longReads && "
+        "scp -o \"ProxyJump {JUMP}\" "
+            "hedron:{params.wd}/aligned.daa {output}"
