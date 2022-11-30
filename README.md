@@ -32,11 +32,15 @@ E.g. to download the `.fast5` files into this local repository, say folder
 snakemake -c1 data/barcode03 -C raw_data_local=data
 ```
 
-When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see [Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)), e.g.:
+When running the worklow, don't forget to add `--use-conda` flag to your workflow execution command to set up conda environments for used tools (for more information, see [Integrated Package Managment](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#integrated-package-management)), and specify Your
+username to login into faculty servers, e.g.:
 
 ```
-snakemake -c4 --use-conda
+snakemake -c4 --use-conda -C username={Your xlogin}
 ```
+
+Then login into the `hedron` server and run `MEGAN` to analyse
+`~/vargac/IV110/{barcode}/aligned.daa` files.
 
 # How to contribute
 
