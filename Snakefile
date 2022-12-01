@@ -10,7 +10,6 @@ rule all:
         expand(f"{OUTPUT_DIR}/minionqc/{{barcode}}", barcode=BARCODES),
         expand(f"{OUTPUT_DIR}/megan/{{barcode}}/aligned.daa", barcode=BARCODES)
 
-
 rule download:
     output:
         directory(f"{config['raw_data_local']}/{{barcode}}")
@@ -112,14 +111,17 @@ rule diamond:
     output:
         f"{OUTPUT_DIR}/diamond/{{barcode}}/aligned.daa"
     params:
-        wd="~/vargac/IV110/{barcode}"
+        wd="vargac/IV110/{barcode}"
     shell:
+        "ssh -J {JUMP} hedron "
+            "mkdir -p {params.wd} && "
         "scp -o \"ProxyJump {JUMP}\" "
             "{input} hedron:{params.wd}/ && "
         "ssh -J {JUMP} hedron "
-            "diamond blastx -q {params.wd}/consensus.fasta -d nr.dmnd "
-            "-o {params.wd}/aligned.daa "
+            "diamond blastx -q {params.wd}/consensus.fasta "
+            "-d /mnt/nas/biodata/nr.dmnd -o {params.wd}/aligned.daa "
             "-F 15 -f 100 --range-culling --top 10 -p 4 && "
+        "mkdir -p $(dirname {output}) && "
         "scp -o \"ProxyJump {JUMP}\" "
             "hedron:{params.wd}/aligned.daa {output}"
 
@@ -129,12 +131,15 @@ rule meganize:
     output:
         f"{OUTPUT_DIR}/megan/{{barcode}}/aligned.daa"
     params:
-        wd="~/vargac/IV110/{barcode}"
+        wd="vargac/IV110/{barcode}"
     shell:
+        "ssh -J {JUMP} hedron "
+            "mkdir -p {params.wd} && "
         "scp -o \"ProxyJump {JUMP}\" "
             "{input} hedron:{params.wd}/ && "
         "ssh -J {JUMP} hedron "
             f"{config['meganizer']} -i {{params.wd}}/aligned.daa "
             f"-mdb {config['megan_map']} --longReads && "
+        "mkdir -p $(dirname {output}) && "
         "scp -o \"ProxyJump {JUMP}\" "
             "hedron:{params.wd}/aligned.daa {output}"
